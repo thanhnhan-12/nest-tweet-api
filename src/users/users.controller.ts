@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, ValidationPipe } from "@nestjs/common";
-import { UsersService } from "./users.service";
+import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Post, Query } from "@nestjs/common";
 import { CreateUserDto } from "./dtos/create-user.dto";
+import { GetUserParamDto } from "./dtos/get-user-param.dto";
+import { UsersService } from "./users.service";
 
 // http://localhost:3000/users
 
@@ -12,8 +13,13 @@ export class UsersController {
         this.usersService = new UsersService();
     }
 
-    @Get()
-    getUsers(@Query() query: string) {
+    @Get(':isMarried')
+    getUsers(@Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Param() param: GetUserParamDto,
+    ) {
+        console.log("Param", param);
+
         return this.usersService.getAllUsers();
     }
 
