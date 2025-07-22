@@ -1,3 +1,6 @@
+import { Injectable } from "@nestjs/common";
+
+@Injectable()
 export class UsersService {
     users: { id: number, name: string, email: string, gender: string, isMarried: boolean }[] = [
         { id: 1, name: "Joel", email: "joel@gmail.com", gender: "male", isMarried: false, },
