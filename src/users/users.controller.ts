@@ -9,9 +9,7 @@ import { UpdateUserDto } from "./dtos/update-user.dto";
 @Controller('users')
 export class UsersController {
 
-    constructor(private usersService: UsersService) {
-
-    }
+    constructor(private usersService: UsersService) { }
 
     @Get()
     getUsers(@Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
