@@ -14,28 +14,23 @@ export class UsersController {
     constructor(private usersService: UsersService) { }
 
     @Get()
-    getUsers(@Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-        @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Param() param: GetUserParamDto,
-    ) {
-        // console.log("Param", param);
+    getUsers() {
         return this.usersService.getAllUsers();
     }
 
-    @Get(":id")
-    getUserById(@Param("id", ParseIntPipe) id: number) {
-        return this.usersService.getUserById(id);
-    }
+    // @Get(":id")
+    // getUserById(@Param("id", ParseIntPipe) id: number) {
+    //     return this.usersService.getUserById(id);
+    // }
 
     @Post()
     createUser(@Body() user: CreateUserDto) {
-        // this.usersService.createUser(user);
-        return "A new user has been created!";
+        this.usersService.createUser(user);
     }
 
-    @Patch()
-    updateUser(@Body() user: UpdateUserDto) {
-        console.log(user);
-        return "Updated Successfully!"
-    }
+    // @Patch()
+    // updateUser(@Body() user: UpdateUserDto) {
+    //     console.log(user);
+    //     return "Updated Successfully!"
+    // }
 }
