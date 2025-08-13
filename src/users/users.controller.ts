@@ -1,8 +1,6 @@
 import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { GetUserParamDto } from "./dtos/get-user-param.dto";
-import { UpdateUserDto } from "./dtos/update-user.dto";
 
 import { UsersService } from "./users.service";
 

@@ -6,18 +6,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profile/profile.module';
 import { TweetModule } from './tweet/tweet.module';
 import { UsersModule } from './users/users.module';
 
 import { User } from './users/user.entity';
 
 @Module({
-  imports: [UsersModule, TweetModule, AuthModule, TypeOrmModule.forRootAsync({
+  imports: [UsersModule, ProfileModule, TweetModule, AuthModule, TypeOrmModule.forRootAsync({
     imports: [],
     inject: [],
     useFactory: () => ({
       type: "mysql",
-      entities: [User],
+      // entities: [User],
+      autoLoadEntities: true,
       synchronize: true,
       host: "localhost",
       port: 3306,
