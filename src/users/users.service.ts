@@ -1,17 +1,21 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { DeepPartial, Repository } from "typeorm";
 
 import { AuthService } from "src/auth/auth.service";
 
 import { User } from "./user.entity";
 import { CreateUserDto } from "./dtos/create-user.dto";
+import { Profile } from "src/profile/profile.entity";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+
+        @InjectRepository(Profile)
+        private profileRepository: Repository<Profile>
     ) { }
 
     getAllUsers() {
@@ -19,21 +23,19 @@ export class UsersService {
     }
 
     public async createUser(userDto: CreateUserDto) {
-        // Validate if a User exist with the given email
-        const user = await this.userRepository.findOne({
-            where: { email: userDto.email }
-        })
+        // Create a Profile & Save
+        userDto.profile = userDto.profile ?? {};
+        let profile = this.profileRepository.create(userDto.profile);
+        await this.profileRepository.save(profile);
 
-        // Handle the error/ exception
-        if (user) {
-            return "The User with the given email already exists!";
-        }
+        // Create User Object
+        let user = this.userRepository.create(userDto);
 
-        // Create that User
-        let newUser = this.userRepository.create(userDto);
-        newUser = await this.userRepository.save(newUser);
+        // Set the profile
+        user.profile = profile;
 
-        return newUser
+        // Save the user object
+        return await this.userRepository.save(user);
     }
 
 }

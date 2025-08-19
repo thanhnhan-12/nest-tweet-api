@@ -28,6 +28,6 @@ export class CreateProfileDto {
     bio?: string;
 
     @IsOptional()
-    @IsDate()
+    @IsString()
     profileImage?: string;
 }
