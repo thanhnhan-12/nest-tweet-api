@@ -1,12 +1,10 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeepPartial, Repository } from "typeorm";
+import { Repository } from "typeorm";
 
-import { AuthService } from "src/auth/auth.service";
-
-import { User } from "./user.entity";
-import { CreateUserDto } from "./dtos/create-user.dto";
 import { Profile } from "src/profile/profile.entity";
+import { CreateUserDto } from "./dtos/create-user.dto";
+import { User } from "./user.entity";
 
 @Injectable()
 export class UsersService {
@@ -23,19 +21,21 @@ export class UsersService {
     }
 
     public async createUser(userDto: CreateUserDto) {
-        // Create a Profile & Save
-        userDto.profile = userDto.profile ?? {};
-        let profile = this.profileRepository.create(userDto.profile);
-        await this.profileRepository.save(profile);
+        try {
+            // Create a Profile & Save
+            userDto.profile = userDto.profile ?? {};
 
-        // Create User Object
-        let user = this.userRepository.create(userDto);
+            // Create User Object
+            let user = this.userRepository.create(userDto);
 
-        // Set the profile
-        user.profile = profile;
-
-        // Save the user object
-        return await this.userRepository.save(user);
+            // Save the user object
+            return await this.userRepository.save(user);
+        } catch (error) {
+            if (error.code === 'ER_DUP_ENTRY') {
+                throw new ConflictException('Email or username already exists!');
+            }
+            throw new InternalServerErrorException(error.message);
+        }
     }
 
 }

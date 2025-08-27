@@ -23,7 +23,7 @@ export class UsersController {
 
     @Post()
     createUser(@Body() user: CreateUserDto) {
-        this.usersService.createUser(user);
+        return this.usersService.createUser(user);
     }
 
     // @Patch()
